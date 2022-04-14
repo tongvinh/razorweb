@@ -49,7 +49,14 @@ builder.Services.Configure<IdentityOptions>(options =>
   // Cấu hình đăng nhập.
   options.SignIn.RequireConfirmedEmail = true; // Cấu hình xác thực địa chỉ email (email phải tồn tại)
   options.SignIn.RequireConfirmedPhoneNumber = false; // Xác thực số điện thoại
+  options.SignIn.RequireConfirmedAccount = true;
 
+});
+
+builder.Services.ConfigureApplicationCookie(options =>{
+  options.LoginPath ="/login/";
+  options.LogoutPath = "/logout/";
+  options.AccessDeniedPath = "/khongduoctruycap.html";
 });
 
 builder.Services.AddOptions();                                //Kích hoat Options
@@ -58,6 +65,7 @@ builder.Services.Configure<MailSettings>(mailsettings);       //Đăng ký đê 
 // Đăng ký SendMailService với kiểu Transient, mỗi lần gọi dịch
 // vụ ISendMailService một đới tượng SendMailService tạo ra (đã inject config)
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
+
 
 var app = builder.Build();
 
