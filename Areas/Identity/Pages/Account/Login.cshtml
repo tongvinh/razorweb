@@ -3,9 +3,15 @@
 
 @{
     ViewData["Title"] = "Đăng nhập";
+    @* this.TempData.ContainsKey("ErrorMessage"); *@
+    var thongbao = TempData["ErrorMessage"];
 }
 
 <h1>@ViewData["Title"]</h1>
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="thongbao"/>
+}
 <div class="row">
     <div class="col-md-4">
         <section>
@@ -13,12 +19,14 @@
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.UserNameOrEmail" class="form-control" autocomplete="username" aria-required="true" />
+                    <input asp-for="Input.UserNameOrEmail" class="form-control" autocomplete="username"
+                        aria-required="true" />
                     <label asp-for="Input.UserNameOrEmail" class="form-label"></label>
                     <span asp-validation-for="Input.UserNameOrEmail" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password"
+                        aria-required="true" />
                     <label asp-for="Input.Password" class="form-label"></label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
@@ -48,14 +56,29 @@
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Sử dụng dịch vụ ngoài(Google, Facebook...) để đăng nhập.</h3>
-            <hr />
-            <p>Chưa cấu hình</p>
-        </section>
+        @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+        {
+            <section>
+                <h3>Sử dụng dịch vụ ngoài.</h3>
+                <hr />
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post"
+                class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name"
+                            title="Sử dụng @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            </section>
+        }
+
     </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }

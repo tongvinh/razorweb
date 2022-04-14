@@ -53,11 +53,26 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 });
 
-builder.Services.ConfigureApplicationCookie(options =>{
-  options.LoginPath ="/login/";
+builder.Services.ConfigureApplicationCookie(options =>
+{
+  options.LoginPath = "/login/";
   options.LogoutPath = "/logout/";
   options.AccessDeniedPath = "/khongduoctruycap.html";
 });
+
+//Đăng nhập bên thứ 3
+builder.Services.AddAuthentication()
+  .AddGoogle(googleOptions =>
+  {
+    // Đọc thông tin Authentication:Google từ appsettings.json
+    IConfigurationSection googleAuthNsection = configuration.GetSection("Authentication:Google");
+
+    // Thiết lập ClientID và ClientSecret để truy cập API google
+    googleOptions.ClientId = googleAuthNsection["ClientId"];
+    googleOptions.ClientSecret = googleAuthNsection["ClientSecret"];
+    // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+    googleOptions.CallbackPath = "/dang-nhap-tu-google";
+  });
 
 builder.Services.AddOptions();                                //Kích hoat Options
 var mailsettings = configuration.GetSection("MailSettings");  // Đọc config
@@ -102,4 +117,7 @@ Identity:
   /Identity/Account/Manage
 
   dotnet aspnet-codegenerator identity -dc razorweb.models.MyBlogContext
+
+CallbackPath
+  https://localhost:5000/dang-nhap-tu-google
 */
