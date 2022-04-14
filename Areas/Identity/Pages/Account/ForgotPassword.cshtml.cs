@@ -2,12 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +14,7 @@ using razorweb.models;
 
 namespace razorweb.Areas.Identity.Pages.Account
 {
-    public class ForgotPasswordModel : PageModel
+  public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
@@ -45,8 +42,8 @@ namespace razorweb.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage ="Phải nhập {0}")]
+            [EmailAddress(ErrorMessage ="Sai định dạng {0}")]
             public string Email { get; set; }
         }
 
@@ -74,7 +71,7 @@ namespace razorweb.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hãy bấm <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>vào đây để lấy lại mật khẩu</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
