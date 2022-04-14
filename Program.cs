@@ -1,3 +1,6 @@
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using razorweb.models;
 
@@ -12,6 +15,49 @@ builder.Services.AddDbContext<MyBlogContext>(options =>
   string connectionString = configuration.GetConnectionString("MyBlogContext");
   options.UseSqlServer(connectionString);
 });
+
+//Đăng ký Identity
+// builder.Services.AddIdentity<AppUser, IdentityRole>()
+//   .AddEntityFrameworkStores<MyBlogContext>()
+//   .AddDefaultTokenProviders();
+
+builder.Services.AddDefaultIdentity<AppUser>()
+  .AddEntityFrameworkStores<MyBlogContext>()
+  .AddDefaultTokenProviders();
+
+// Truy cập IdentityOptions
+builder.Services.Configure<IdentityOptions>(options =>
+{
+  // Thiết lập về Password
+  options.Password.RequireDigit = false; // Không bắt phải có số
+  options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
+  options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
+  options.Password.RequireUppercase = false; // Không bắt buộc chữ in
+  options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+  options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
+
+  // Cấu hình Lockout - khóa user
+  options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
+  options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
+  options.Lockout.AllowedForNewUsers = true;
+
+  // Cấu hình về User.
+  options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+  options.User.RequireUniqueEmail = true; // Email là duy nhất
+
+  // Cấu hình đăng nhập.
+  options.SignIn.RequireConfirmedEmail = true; // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+  options.SignIn.RequireConfirmedPhoneNumber = false; // Xác thực số điện thoại
+
+});
+
+builder.Services.AddOptions();                                //Kích hoat Options
+var mailsettings = configuration.GetSection("MailSettings");  // Đọc config
+builder.Services.Configure<MailSettings>(mailsettings);       //Đăng ký đê inject
+// Đăng ký SendMailService với kiểu Transient, mỗi lần gọi dịch
+// vụ ISendMailService một đới tượng SendMailService tạo ra (đã inject config)
+builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 var app = builder.Build();
 
@@ -28,6 +74,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
@@ -38,4 +85,13 @@ app.Run();
 CREATE, READ, UPDATE, DELETE (CRUD)
 
 dotnet aspnet-codegenerator razorpage -m razorweb.models.Article -dc razorweb.models.MyBlogContext -outDir Pages/Blog -udl --referenceScriptLibraries
+
+Identity:
+  - Authentication: Xác định danh tính -> Login, Logout ...
+  - Authorization: Xác thực quyền truy cập
+  - Quản lý user: Sign Up, User, Role ...
+  /Identity/Account/Login
+  /Identity/Account/Manage
+
+  dotnet aspnet-codegenerator identity -dc razorweb.models.MyBlogContext
 */
