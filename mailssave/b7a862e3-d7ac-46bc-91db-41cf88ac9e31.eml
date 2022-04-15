@@ -1,0 +1,10 @@
+From: Admin <vinhtq.dev@gmail.com>
+Date: Fri, 15 Apr 2022 09:48:26 +0700
+Subject: Confirm your email
+Message-Id: <9FA94NC1LGU4.GM0DNU1YTBDO2@vinhtong>
+Sender: Admin <vinhtq.dev@gmail.com>
+To: vinhtq.devaaaa@gmail.com
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+
+<a href='https://localhost:5000/Identity/Account/ConfirmEmailChange?userId=d415f722-42c3-49ad-bd53-31b8a4fdf608&amp;email=vinhtq.devaaaa@gmail.com&amp;code=Q2ZESjhDT1BvWjdreG1sTnYyR0NWR2VtY1hnNTlEbjgzTitMT3o4dStHTzJqTWpvT1doQWdVMmNtd0FvMkFwTDJqVGs1ZWZtM3N2cjRaUWNLcjRHOVdJQVNaMlNVcjJoaXZlNEZsdlduaEdnS1pqSzlueHA0N1R3QWF6U0gyYkNRakgrdkRCd2ZtaDQzcFY1cHRDOG1tY2ZLS29aOWMvVEpGaFRDcnJJY0U2SVZTeW9jR29HZU9JMHlDeS8xZG9uR1paOW8vMDJvWTN1Z1FjZXVpYndiWFY1Wi93Mmo5N01qdG9xODRTT2txN0NDdHFyZlJUamtOTzRIRFNJRDFna2RVRnNSRlVYQ2llK2tFcFZSeEQ4cThFblpZST0'>Bấm vào đây để đổi email</a>.

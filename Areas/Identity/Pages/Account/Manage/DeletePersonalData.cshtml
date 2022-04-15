@@ -1,15 +1,15 @@
 ﻿@page
 @model DeletePersonalDataModel
 @{
-    ViewData["Title"] = "Delete Personal Data";
+    ViewData["Title"] = "Xoá tài khoản";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
 <h3>@ViewData["Title"]</h3>
 
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning mb-3" role="alert">
     <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+        <strong>Xoá tài khoản thì sẻ không thể phục hồi</strong>
     </p>
 </div>
 
@@ -18,13 +18,13 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @if (Model.RequirePassword)
         {
-            <div class="form-floating">
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
                 <label asp-for="Input.Password" class="form-label"></label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
         }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
+        <button class="w-100 btn btn-lg btn-danger" type="submit">Xoá tài khoản</button>
     </form>
 </div>
 
