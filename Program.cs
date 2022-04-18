@@ -1,4 +1,5 @@
 
+using App.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +18,13 @@ builder.Services.AddDbContext<MyBlogContext>(options =>
 });
 
 //Đăng ký Identity
-// builder.Services.AddIdentity<AppUser, IdentityRole>()
-//   .AddEntityFrameworkStores<MyBlogContext>()
-//   .AddDefaultTokenProviders();
-
-builder.Services.AddDefaultIdentity<AppUser>()
+builder.Services.AddIdentity<AppUser, IdentityRole>()
   .AddEntityFrameworkStores<MyBlogContext>()
   .AddDefaultTokenProviders();
+
+// builder.Services.AddDefaultIdentity<AppUser>()
+//   .AddEntityFrameworkStores<MyBlogContext>()
+//   .AddDefaultTokenProviders();
 
 // Truy cập IdentityOptions
 builder.Services.Configure<IdentityOptions>(options =>
@@ -53,6 +54,13 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 });
 
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+  //Trên 30 giây truy cập lại sẽ nạp lại thông tin User (Role)
+  //SercurityStamp trong bảng User đổi -> nạp lại thông tin Security
+  options.ValidationInterval = TimeSpan.FromSeconds(30);
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
   options.LoginPath = "/login/";
@@ -80,7 +88,7 @@ builder.Services.Configure<MailSettings>(mailsettings);       //Đăng ký đê 
 // Đăng ký SendMailService với kiểu Transient, mỗi lần gọi dịch
 // vụ ISendMailService một đới tượng SendMailService tạo ra (đã inject config)
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
-
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
 var app = builder.Build();
 
@@ -112,6 +120,19 @@ dotnet aspnet-codegenerator razorpage -m razorweb.models.Article -dc razorweb.mo
 Identity:
   - Authentication: Xác định danh tính -> Login, Logout ...
   - Authorization: Xác thực quyền truy cập
+    Role-based authorization - xác thự quyền theo vai trò
+      -Role (vai trò) : (Admin, Editor, Manager, Member ...)
+    /Areas/Admin/Pages/Role
+    Index
+    Create
+    Edit
+    Delete
+
+    dotnet new page -n Index -o /Areas/Admin/Pages/Role -na App.Admin.Role
+    dotnet new page -n Create -o /Areas/Admin/Pages/Role -na App.Admin.Role
+
+    [Authorize] - Controller, Action, PageModel --> user login (dang nhap)
+
   - Quản lý user: Sign Up, User, Role ...
   /Identity/Account/Login
   /Identity/Account/Manage

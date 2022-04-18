@@ -29,28 +29,21 @@ namespace razorweb.Pages_Blog
 
     public async Task OnGetAsync(string SearchString)
     {
-      // Article = await _context.articles.ToListAsync();
-      int totalArticle = await _context.articles.CountAsync();
-      countPages = (int)Math.Ceiling((double)totalArticle / ITEMS_PER_PAGE);
 
-      if (currentPage < 1)
-        currentPage = 1;
-      if (currentPage > countPages)
-        currentPage = countPages;
-
-      var query = (from a in _context.articles
-                  orderby a.Created descending
-                  select a)
-                  .Skip((currentPage - 1) * ITEMS_PER_PAGE)
-                  .Take(ITEMS_PER_PAGE);
+      var query = from a in _context.articles
+                  select a;
       if (!string.IsNullOrEmpty(SearchString))
       {
-        Article = await query.Where(x => x.Title.Contains(SearchString)).ToListAsync();
+        query = query.Where(x => x.Title.Contains(SearchString));
       }
-      else
-      {
-        Article = await query.ToListAsync();
-      }
+      int totalArticle = await query.CountAsync();
+      countPages = (int)Math.Ceiling((double)totalArticle / ITEMS_PER_PAGE);
+      if (currentPage < 1)
+        currentPage = 1;
+      if (currentPage > countPages && countPages > 0)
+        currentPage = countPages;
+
+      Article = await query.OrderByDescending(x => x.Created).Skip((currentPage - 1) * ITEMS_PER_PAGE).Take(ITEMS_PER_PAGE).ToListAsync();
     }
   }
 }
