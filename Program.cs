@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using App.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -90,6 +91,25 @@ builder.Services.Configure<MailSettings>(mailsettings);       //Đăng ký đê 
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
+//Thêm các policy
+builder.Services.AddAuthorization(options => {
+  options.AddPolicy("AllowEditRole", policyBuilder => {
+    //Điều kiện của Policy
+    policyBuilder.RequireAuthenticatedUser();
+    // policyBuilder.RequireRole("Admin");
+    // policyBuilder.RequireRole("Editor");
+
+    // policyBuilder.RequireClaim("manage.role","add", "update");
+    policyBuilder.RequireClaim("canedit","user");
+    // policyBuilder.RequireClaim("","");
+    // IdentityRoleClaim<string> claim1;
+    // IdentityUserClaim<string> claim2;
+    // Claim claim3;
+
+
+  });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -120,8 +140,20 @@ dotnet aspnet-codegenerator razorpage -m razorweb.models.Article -dc razorweb.mo
 Identity:
   - Authentication: Xác định danh tính -> Login, Logout ...
   - Authorization: Xác thực quyền truy cập
-    Role-based authorization - xác thự quyền theo vai trò
+    *Role-based authorization - xác thực quyền theo vai trò
       -Role (vai trò) : (Admin, Editor, Manager, Member ...)
+
+    *Policy-based authorization - Xác thực quền theo chính sách
+    *Claims-based authorization :
+      Claims -> Đặc tính, tính chất của đối tượng (User)
+
+      Bằng lái B2 (Role) -> Được lái 4 chổ
+        - Ngày sinh -> claim
+        - Nơi sinh -> claim
+      Mua rươu ( > 18 tuổi)
+        - Kiểm tra ngày sinh: Claims-based authorization
+
+
     /Areas/Admin/Pages/Role
     Index
     Create
