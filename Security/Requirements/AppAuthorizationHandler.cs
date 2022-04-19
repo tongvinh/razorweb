@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using razorweb.models;
+using App.Models;
 
 namespace App.Security.Requirements
 {

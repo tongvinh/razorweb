@@ -3,14 +3,14 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using razorweb.models;
+using App.Models;
 
 namespace App.Admin.Role
 {
   [Authorize(Roles = "Admin")]
   public class AddRoleClaimModel : RolePageModel
   {
-    public AddRoleClaimModel(RoleManager<IdentityRole> roleManage, MyBlogContext myBlogContext) : base(roleManage, myBlogContext)
+    public AddRoleClaimModel(RoleManager<IdentityRole> roleManage, AppDbContext myBlogContext) : base(roleManage, myBlogContext)
     {
     }
     public class InputModel

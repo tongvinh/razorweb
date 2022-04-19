@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using razorweb.models;
+using App.Models;
 
 namespace App.Admin.Role
 {
@@ -14,7 +14,7 @@ namespace App.Admin.Role
     }
 
     public List<RoleModel> roles { get; set; }
-    public IndexModel(RoleManager<IdentityRole> roleManage, MyBlogContext myBlogContext) : base(roleManage, myBlogContext)
+    public IndexModel(RoleManager<IdentityRole> roleManage, AppDbContext myBlogContext) : base(roleManage, myBlogContext)
     {
     }
     public async Task OnGet()

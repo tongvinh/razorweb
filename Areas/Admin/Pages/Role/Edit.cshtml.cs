@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using razorweb.models;
+using App.Models;
 
 namespace App.Admin.Role
 {
@@ -12,7 +12,7 @@ namespace App.Admin.Role
   // [Authorize(Roles ="Admin")]
   public class EditModel : RolePageModel
   {
-    public EditModel(RoleManager<IdentityRole> roleManage, MyBlogContext myBlogContext) : base(roleManage, myBlogContext)
+    public EditModel(RoleManager<IdentityRole> roleManage, AppDbContext myBlogContext) : base(roleManage, myBlogContext)
     {
     }
     public class InputModel

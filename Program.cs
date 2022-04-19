@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using razorweb.models;
+using App.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +14,7 @@ ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<MyBlogContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
   string connectionString = configuration.GetConnectionString("MyBlogContext");
   options.UseSqlServer(connectionString);
@@ -22,7 +22,7 @@ builder.Services.AddDbContext<MyBlogContext>(options =>
 
 //Đăng ký Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-  .AddEntityFrameworkStores<MyBlogContext>()
+  .AddEntityFrameworkStores<AppDbContext>()
   .AddDefaultTokenProviders();
 
 // builder.Services.AddDefaultIdentity<AppUser>()
