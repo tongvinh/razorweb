@@ -1,6 +1,8 @@
 
 using System.Security.Claims;
+using App.Security.Requirements;
 using App.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -92,15 +94,17 @@ builder.Services.AddSingleton<IEmailSender, SendMailService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
 //Thêm các policy
-builder.Services.AddAuthorization(options => {
-  options.AddPolicy("AllowEditRole", policyBuilder => {
+builder.Services.AddAuthorization(options =>
+{
+  options.AddPolicy("AllowEditRole", policyBuilder =>
+  {
     //Điều kiện của Policy
     policyBuilder.RequireAuthenticatedUser();
     // policyBuilder.RequireRole("Admin");
     // policyBuilder.RequireRole("Editor");
 
     // policyBuilder.RequireClaim("manage.role","add", "update");
-    policyBuilder.RequireClaim("canedit","user");
+    policyBuilder.RequireClaim("canedit", "user");
     // policyBuilder.RequireClaim("","");
     // IdentityRoleClaim<string> claim1;
     // IdentityUserClaim<string> claim2;
@@ -108,7 +112,26 @@ builder.Services.AddAuthorization(options => {
 
 
   });
+
+  options.AddPolicy("InGenZ", policyBuilder =>
+  {
+    policyBuilder.RequireAuthenticatedUser();
+    policyBuilder.Requirements.Add(new GenZRequirement()); //GenZRequirement
+
+    // new GenZRequirement() -> Authorization handler
+  });
+
+  options.AddPolicy("ShowAdminMenu", policyBuilder =>
+  {
+    policyBuilder.RequireRole("Admin");
+  });
+  
+  options.AddPolicy("CanUpdateArticle", policyBuilder =>{
+    policyBuilder.Requirements.Add(new ArticleUpdateRequirement());
+  });
 });
+
+builder.Services.AddTransient<IAuthorizationHandler, AppAuthorizationHandler>();
 
 var app = builder.Build();
 
